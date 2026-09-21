@@ -12,6 +12,8 @@
 
 **Attributes, domains, primary keys(PK) and foreign keys(FK) in each schema are listed below:**
 
+```mermaid
+erDiagram
     PASSENGERS {
         INT passenger_id PK
         VARCHAR passenger_username FK
@@ -71,3 +73,9 @@
         INT flight_id FK
         INT fare_price
     }
+
+    PASSENGERS ||--o{ BOOKINGS : "owns"
+    PASSENGERS ||--o{ FLIGHTS : "owns"
+    FLIGHTS ||--o{ AIRPORTS : "uses"
+    FLIGHTS ||--o{ FLIGHT_ROUTES : "routes"
+```
