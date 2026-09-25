@@ -20,15 +20,15 @@ catalog - airports
 junction - flight_routes
 
 **Design decisions**
-passengers:
+passengers: provide all passenger data to register a flight online
 
-flights:
+flights: provide all details of a flight to trace the flight status and route. This will be very useful to retrieve flights information for tracking.
 
-bookings:
+bookings: this connects the relationship between the passenger and the flights. It also collect the flight reservation data required to review and populate for passenger.
 
-airports:
+airports: each airport will have their own table. This table should store the core information one need to reference to when booking or trcking for a flight
 
-flight_routes:
+flight_routes: each booking and flights leads to the route the plane will takes and they are all unque. this includes the route informtion details one can check.
 
 
 **Paw Airline Booking ERD:**

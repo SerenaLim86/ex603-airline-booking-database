@@ -3,20 +3,56 @@
 
 **For each schema below, listed their constraint and ON DELETE behavior.**
 
+The constraints table:
+
+|FK| ON DELETE   | reason |
+| --- | --- | --- |
+|departure_airport_id| DELETE SET NULL  | maintain data |
+|arrival_airport_id| DELETE SET NULL  | maintain data |
+|route_id| DELETE SET NULL  | maintain data |
+|passenger_id| DELETE CASCADE  | remove and archive to del table |
+|flight_id| DELETE SET NULL  | maintain data |
+
+- Almost all of the attributes in the tables are set to NOT NULL since most are required field in the database.
+ - FK like flight_id referece attribute in other tables are set DELETE on NULL because we wanted to maintain the other data even they are removed. If we need to access the other information with a joint, we cn still access. Another consideration is to keep history records.
+ -  passenger_id is set to on DELETE CASCADE because it is better to create a history table in the future for archieved member than setting a member to NULL. Keeping it as NULL with other active record will be wasting space in these tables and become messy overtime.
+
+ The CHECK constraints:
+
+ - Some fields required a standardize format like email, or selections like flight status, those are desgned to have a CHECK to constrain only the listed values allowed to entry. 
+
 PASSENGERS: 
-    VARCHAR passenger_username FK, INT booking_id FK
+    
+    CHECK (passenger_email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
 
 BOOKINGS:
-    INT flight_id FK
+    
+    CHECK (booking_status IN ('Confirmed', 'Cancelled', 'Pending'))
+    
+    FOREIGN KEY (passenger_id) REFERENCES passenger(passenger_id) ON DELETE CASCADE,
+   
+    FOREIGN KEY (flight_id) REFERENCES flights(flight_id) ON DELETE SET NULL
    
 FLIGHTS:
-    INT booking_id FK
+    
+    CHECK (departure_status IN ('Scheduled', 'Cancelled', 'Delayed', 'Early'))
+    
+    CHECK (arrival_status IN ('Scheduled', 'Cancelled', 'Delayed', 'Early'))
        
 AIRPORTS:
-    INT flight_id FK
+    
+    CHECK (airport_status IN ('Operate', 'Closed'))
     
 FLIGHT_ROUTES:
-    INT flight_id FK
+   
+    CHECK (route_status IN ('Active', 'Pending', 'Suspected'))
+    
+    FOREIGN KEY (departure_airport_id) REFERENCES airports(airport_id) ON DELETE SET NULL
+
+    FOREIGN KEY (arrival_airport_id) REFERENCES airports(airport_id) ON DELETE SET NULL
+
+    CHECK (departure_airport_id <> arrival_airport_id)
+
 
 >**Note:** booking_id and flight_id are FK in both PASSENGERS and FLIGHT_ROUTES schemas
 
