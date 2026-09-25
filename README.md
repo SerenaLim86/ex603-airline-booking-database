@@ -11,85 +11,93 @@ The main purpose of this database is to store and allow processing of the airlin
 
 **Schema：**
 
-Below are the five roles for the Paw Airline Booking database and our design decisions.
+Below are the five roles for the Paw Airline Booking database and our design decisions. Each role is created into each own seperate table.
+
 actor - passengers
 producer - flights
 event - bookings
 catalog - airports
 junction - flight_routes
 
+**Design decisions**
+passengers:
+
+flights:
+
+bookings:
+
+airports:
+
+flight_routes:
+
+
 **Paw Airline Booking ERD:**
 
 >airline-booking ERD using mermaid diagram
 
 ```mermaid
-%%{init: {'theme': 'redux-color'}}%%
+%%{init: {'theme': 'redux-color', 'look': 'classic'}}%%
 erDiagram
 
-    PASSENGERS {
-        INT passenger_id PK
-        VARCHAR passenger_username FK
+    AIRPORTS {
+        VARCHAR airport_id PK
+        VARCHAR airport_name UK
+        VARCHAR airport_code UK
+        VARCHAR airport_city
+        VARCHAR airport_country
+        VARCHAR airport_status
+    }
+
+    PASSENGER {
+        VARCHAR passenger_id PK
+        VARCHAR passenger_username UK
         VARCHAR passenger_first_name
         VARCHAR passenger_middle_name
         VARCHAR passenger_last_name
-        VARCHAR passenger_email
+        DATE passenger_DOB
+        VARCHAR passenger_email UK
         VARCHAR passenger_phone
+        DATE passenger_enroll_date
+        VARCHAR passenger_loyalty_id UK
         VARCHAR passenger_address_street
         VARCHAR passenger_address_city
         VARCHAR passenger_address_state
-        DATE passenger_DOB
-        DATE passenger_enroll_date
-        INT booking_id FK
+        VARCHAR passenger_address_country
+    }
+
+    FLIGHT_ROUTES {
+        INT route_id PK
+        VARCHAR departure_airport_id FK
+        VARCHAR arrival_airport_id FK
+        INT route_distance
+        INT estimated_duration
+        VARCHAR route_status
+    }
+
+    FLIGHTS {
+        VARCHAR flight_id PK
+        INT route_id FK
+        VARCHAR flight_number
+        TIMESTAMP departure_date
+        TIMESTAMP arrival_date
+        VARCHAR departure_status
+        VARCHAR arrival_status
     }
 
     BOOKINGS {
         INT booking_id PK
-        INT booking_status
-        DATE booking_date
-        TIMESTAMP booking_time
-        INT flight_id FK
-        FLOAT fare_price
+        VARCHAR passenger_id FK
+        VARCHAR flight_id FK
+        VARCHAR booking_status
+        TIMESTAMP booking_date
+        NUMERIC fare_price
     }
 
-    FLIGHTS {
-        INT flight_id PK
-        INT booking_id FK
-        INT flight_type
-        DATE depart_date
-        TIMESTAMP depart_time
-        DATE arrive_date
-        TIMESTAMP arrive_time
-    }
-
-    AIRPORTS {
-        VARCHAR depart_destination
-        VARCHAR depart_destination_city
-        VARCHAR depart_destination_country
-        VARCHAR depart_destination_status
-        VARCHAR arrive_destination
-        VARCHAR arrive_destination_city
-        VARCHAR arrive_destination_country
-        VARCHAR arrive_destination_status
-        INT flight_id FK
-        VARCHAR flight_depart_status
-        VARCHAR flight_arrive_status
-    }
-
-    FLIGHT_ROUTES {
-        INT booking_id PK
-        INT booking_status
-        DATE depart_date
-        TIMESTAMP depart_time
-        DATE arrive_date
-        TIMESTAMP arrive_time
-        INT flight_id FK
-        INT fare_price
-    }
-
-    PASSENGERS ||--o{ BOOKINGS : "owns"
-    PASSENGERS ||--o{ FLIGHTS : "owns"
-    FLIGHTS ||--o{ AIRPORTS : "uses"
-    FLIGHTS ||--o{ FLIGHT_ROUTES : "routes"
+    AIRPORTS ||--o{ FLIGHT_ROUTES : "departure"
+    AIRPORTS ||--o{ FLIGHT_ROUTES : "arrival"
+    FLIGHT_ROUTES ||--o{ FLIGHTS : "own"
+    PASSENGER ||--o{ BOOKINGS : "makes"
+    FLIGHTS ||--o{ BOOKINGS : "has"
 ```
 
 4. Query catalogue — per unit, a short table listing the queries and the business question each answers, linked to the .sql files.
