@@ -1,8 +1,6 @@
 # Constraints
 **Task 1.3: every constraint with its justification, including each ON DELETE choice.**
 
-**For each schema below, listed their constraint and ON DELETE behavior.**
-
 The constraints table:
 
 |FK| ON DELETE   | reason |
@@ -19,7 +17,10 @@ The constraints table:
 
  The CHECK constraints:
 
- - Some fields required a standardize format like email, or selections like flight status, those are desgned to have a CHECK to constrain only the listed values allowed to entry. 
+ - Some fields required a standardize format like email
+ - Selections like flight status are desgned to have a CHECK to allow only the listed values for entry. (ex. 'Confirmed', 'Cancelled', 'Pending')
+
+ **For each schema below, listed their constraint and ON DELETE command.**
 
 PASSENGERS: 
     
